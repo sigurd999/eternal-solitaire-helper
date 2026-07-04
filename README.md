@@ -13,9 +13,9 @@ No AI, no screenshots, no API key. You type in the board once, and this tool tel
 
 ## Running it
 
-**Windows:** double-click `nirmana_helper.bat`.
-
-**Any OS:** `python3 nirmana_helper.py`
+```
+python3 nirmana_helper.py
+```
 
 No install step and no dependencies: everything is standard library.
 
@@ -32,7 +32,6 @@ These were transcribed from the in-game tutorial. The tool always shows the boar
 
 ## Files
 
-- `nirmana_helper.bat` / `nirmana_helper.ps1` — double-click launchers (Windows).
 - `nirmana_helper.py` — driver: prompts you for the board, then loops turn to turn.
 - `nirmana_solver.py` — deterministic game rules and move search. Also runnable standalone.
 - `nirmana_state.json` — saved board state between turns and runs (created at runtime, not checked in).
