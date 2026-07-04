@@ -1,7 +1,7 @@
 """
 Deterministic solver for Nirmana's solitaire minigame (an Oware-style,
 single-player sowing puzzle). Everything about sowing, scoring, cascades,
-peril, and move selection lives here; the driver in nirmana_agent.py only
+peril, and move selection lives here; the driver in nirmana_helper.py only
 handles reading the board from you and tracking state between turns.
 
 Board representation

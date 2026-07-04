@@ -7,7 +7,7 @@ cd /d "%~dp0"
 set "PYEXE=C:\Program Files\Python\Python313\python.exe"
 if not exist "%PYEXE%" set "PYEXE=python"
 
-"%PYEXE%" "%~dp0nirmana_agent.py" %*
+"%PYEXE%" "%~dp0nirmana_helper.py" %*
 
 echo.
 pause

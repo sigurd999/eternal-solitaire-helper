@@ -1,4 +1,4 @@
-# Nirmana play helper launcher (PowerShell companion to nirmana_agent.bat).
+# Nirmana play helper launcher (PowerShell companion to nirmana_helper.bat).
 
 $ErrorActionPreference = "Stop"
 
@@ -12,6 +12,6 @@ if (-not (Test-Path $pyExe)) {
 
 Set-Location $scriptDir
 
-& $pyExe (Join-Path $scriptDir "nirmana_agent.py") @args
+& $pyExe (Join-Path $scriptDir "nirmana_helper.py") @args
 
 Read-Host "Press Enter to close"
