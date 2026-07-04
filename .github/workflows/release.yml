@@ -1,0 +1,31 @@
+name: Build and release Windows exe
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Build exe
+        run: pyinstaller --onefile --name eternal-solitaire-helper nirmana_helper.py
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/eternal-solitaire-helper.exe
+          generate_release_notes: true

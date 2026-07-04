@@ -13,6 +13,10 @@ No AI, no screenshots, no API key. You type in the board once, and this tool tel
 
 ## Running it
 
+**Windows, no Python needed:** grab `eternal-solitaire-helper.exe` from the [latest release](../../releases/latest) and run it.
+
+**From source (any OS):**
+
 ```
 python3 nirmana_helper.py
 ```
