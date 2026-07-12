@@ -4,3 +4,7 @@ nirmana_state.json
 build/
 dist/
 *.spec
+
+# Memory system (local only, public repo)
+context/
+.memsearch/
