@@ -1,10 +1,10 @@
 """
 Nirmana solitaire play helper.
 
-No AI and no screenshots: you tell it what's on the board once, at the start
-of a game (or whenever a resync is needed), and from then on it deduces every
-following board itself from the move it told you to play, using the same
-deterministic rules the solver uses to pick moves. That running state is
+No AI and no screenshots: you tell it what's on the 12-pit ring once, at the
+start of a game (or whenever a resync is needed), and from then on it deduces
+every following board itself from the move it told you to play, using the
+same deterministic rules the solver uses to pick moves. That running state is
 saved to nirmana_state.json, so quitting and relaunching resumes where you
 left off without re-entering anything.
 
@@ -24,7 +24,8 @@ STATE_PATH = os.path.join(HERE, "nirmana_state.json")
 
 SEARCH_DEPTH = int(os.environ.get("NIRMANA_DEPTH", str(nirmana_solver.DEFAULT_DEPTH)))
 
-DEFAULT_PIT_COUNT = 12
+# The in-game board is always a ring of 12 pits, so this isn't configurable.
+PIT_COUNT = 12
 
 
 def load_state():
@@ -74,12 +75,13 @@ def prompt_int(message, default):
             print("Please enter a whole number.")
 
 
-def prompt_seed_counts(pit_count):
-    """Ask for every pit's seed count, space separated, clockwise from index 0."""
+def prompt_seed_counts():
+    """Ask for all 12 pits' seed counts, space separated, clockwise from index 0."""
     while True:
         answer = input(
-            "Enter the seed count for each pit, space separated, in clockwise "
-            "order starting from your index 0 (e.g. 3 0 1 2 0 0 4 0 0 0 2 1): "
+            "Enter the seed count for each of the 12 pits, space separated. "
+            "Pick any pit as index 0, then read clockwise around the ring from "
+            "there (e.g. 3 0 1 2 0 0 4 0 0 0 2 1): "
         ).strip()
 
         try:
@@ -88,9 +90,9 @@ def prompt_seed_counts(pit_count):
             print("Please enter whole numbers only, separated by spaces.")
             continue
 
-        if len(counts) != pit_count:
-            print("That's {} counts for a {}-pit board. Try again.".format(
-                len(counts), pit_count
+        if len(counts) != PIT_COUNT:
+            print("That's {} numbers, but the ring has 12 pits. Try again.".format(
+                len(counts)
             ))
             continue
 
@@ -109,18 +111,16 @@ def prompt_yes_no(message, default):
 
 
 def obtain_board():
-    """Ask for the whole board state fresh: pit count, seed counts, score, peril."""
-    pit_count = prompt_int(
-        "\nHow many pits does the board have? [Enter for {}]: ".format(DEFAULT_PIT_COUNT),
-        default=DEFAULT_PIT_COUNT,
+    """Ask for the whole board state fresh: the 12 seed counts, score, peril."""
+    seeds = prompt_seed_counts()
+
+    score = prompt_int(
+        "What number does the SCORE dial in the center show right now? [Enter for 0]: ",
+        default=0,
     )
 
-    seeds = prompt_seed_counts(pit_count)
-
-    score = prompt_int("Current score shown on screen? [Enter for 0]: ", default=0)
-
     peril = prompt_yes_no(
-        "Is the board currently in peril (the center ring is red/jagged)?",
+        "Is the board currently in peril (the center dial flashes red)?",
         default=False,
     )
 
@@ -129,13 +129,13 @@ def obtain_board():
 
 def print_board(seeds, score, peril):
     print()
-    print("Board:")
+    print("Board (clockwise from your index 0):")
 
     for index, count in enumerate(seeds):
         print("  index {:>2}  {} seeds".format(index, count))
 
     print("  score: {}".format(score))
-    print("  peril: {}".format("YES" if peril else "no"))
+    print("  peril: {}".format("YES, one more 0-score turn loses" if peril else "no"))
 
 
 def announce_move(seeds, peril, recommendation):
