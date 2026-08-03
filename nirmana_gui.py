@@ -69,7 +69,7 @@ class NirmanaGUI:
         )
         self.canvas.grid(row=0, column=0, padx=14, pady=14)
 
-        rim = RING_RADIUS + PIT_RADIUS + 18
+        rim = RING_RADIUS + PIT_RADIUS + 32
         self.canvas.create_oval(
             CENTER - rim, CENTER - rim, CENTER + rim, CENTER + rim,
             outline=COLOR_RIM, width=3,
@@ -93,9 +93,12 @@ class NirmanaGUI:
             self._build_pit(index)
 
     def _build_pit(self, index):
-        # Index 0 sits at 12 o'clock, going clockwise from there, matching
-        # how you'd read the ring in the game once you've picked a pit as 0.
-        angle = -math.pi / 2 + index * (2 * math.pi / PIT_COUNT)
+        # The game's ring is mirrored about the vertical axis: no pit sits at
+        # 12 or 6 o'clock, there are 6 pits down each side. That means the
+        # pits are offset by half a step, so index 0 is the first pit
+        # clockwise past 12 o'clock and you read clockwise from there.
+        step = 2 * math.pi / PIT_COUNT
+        angle = -math.pi / 2 + step / 2 + index * step
         x = CENTER + RING_RADIUS * math.cos(angle)
         y = CENTER + RING_RADIUS * math.sin(angle)
 
@@ -105,9 +108,14 @@ class NirmanaGUI:
         )
         self.pit_ovals.append(oval)
 
+        # Push the index label straight out from the centre so it sits
+        # outside the ring on every pit, instead of drifting over the board
+        # on the bottom half.
+        label_radius = RING_RADIUS + PIT_RADIUS + 14
         self.canvas.create_text(
-            x, y - PIT_RADIUS - 12, text=str(index), fill=COLOR_TEXT,
-            font=("Segoe UI", 9),
+            CENTER + label_radius * math.cos(angle),
+            CENTER + label_radius * math.sin(angle),
+            text=str(index), fill=COLOR_TEXT, font=("Segoe UI", 9),
         )
 
         var = tk.StringVar(value="0")
